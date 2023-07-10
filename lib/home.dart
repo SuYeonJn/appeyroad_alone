@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:calendar_view/calendar_view.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -10,36 +11,40 @@ class HomePage extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text('내 스케줄'),
+    return CalendarControllerProvider(
+      controller: EventController(),
+      child: MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(20),
+                child: Text('내 스케줄'),
+              ),
+              Expanded(
+                  flex: 7,
+                  child: WeekView(
+                    heightPerMinute: 0.5,
+                  )),
+              Expanded(
+                flex: 5,
+                child: ListView.builder(
+                    padding: const EdgeInsets.all(20),
+                    itemCount: schedulesList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        leading: const Icon(Icons.calendar_month),
+                        title: Text(schedulesList[index]),
+                        onTap: () {
+                          print('${schedulesList[index]} selected');
+                        },
+                      );
+                    }),
+              )
+            ],
+          ),
         ),
-        Expanded(
-          flex: 5,
-          child: Placeholder(
-              child: Padding(
-            padding: const EdgeInsets.all(100),
-            child: Text('달력'),
-          )),
-        ),
-        Expanded(
-          flex: 5,
-          child: ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: schedulesList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  leading: Icon(Icons.calendar_month),
-                  title: Text('${schedulesList[index]}'),
-                  onTap: () {
-                    print('${schedulesList[index]} selected');
-                  },
-                );
-              }),
-        )
-      ],
+      ),
     );
   }
 }
