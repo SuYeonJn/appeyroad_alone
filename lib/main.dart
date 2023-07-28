@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'friends.dart';
-import 'package:flutter_application_2/home.dart';
-import 'mypage.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'navigator.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -13,62 +19,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'SecondApp',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 2, 62, 112)),
-      ),
-      home: const MyScaffold(),
-    );
-  }
-}
-
-class MyScaffold extends StatefulWidget {
-  const MyScaffold({super.key});
-
-  @override
-  State<MyScaffold> createState() => _MyScaffoldState();
-}
-
-class _MyScaffoldState extends State<MyScaffold> {
-  int currentPageIndex = 0;
-  @override
-  Widget build(BuildContext context) {
-    Widget page;
-    switch (currentPageIndex) {
-      case 0:
-        page = HomePage();
-        break;
-      case 1:
-        page = FriendsPage();
-        break;
-      case 2:
-        page = MyPage();
-        break;
-      default:
-        throw UnimplementedError('no widget for');
-    }
-
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          title: const Text('Schedule'),
+        debugShowCheckedModeBanner: false,
+        title: 'calendar_app_new',
+        theme: ThemeData(
+          useMaterial3: true,
+          appBarTheme: const AppBarTheme(
+            shadowColor: Color.fromARGB(255, 220, 220, 220),
+            backgroundColor: Colors.white,
+          ),
+          scaffoldBackgroundColor: Colors.white,
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(100))),
+            backgroundColor: Color.fromARGB(220, 255, 255, 255),
+          ),
+          fontFamily: 'Lato',
+          textTheme: const TextTheme(
+            displayLarge: TextStyle(fontSize: 72, fontWeight: FontWeight.bold),
+            titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            bodyMedium: TextStyle(
+                fontSize: 15, fontFamily: 'Hind', fontWeight: FontWeight.bold),
+          ),
         ),
-        body: page,
-        bottomNavigationBar: NavigationBar(
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-          selectedIndex: currentPageIndex,
-          destinations: [
-            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-            NavigationDestination(icon: Icon(Icons.people), label: 'Friends'),
-            NavigationDestination(icon: Icon(Icons.settings), label: 'MyPage'),
-          ],
-        ));
+        home: NavigatorBar());
   }
 }
